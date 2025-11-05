@@ -5,27 +5,31 @@ public class FileHandlingActivity {
         // Your code here
 
         // a. Create main directory
-        File main = new File("FileManipulationChallenge");
+        File main = new File("JavaFileSystem");
         if (!main.exists()) {
             main.mkdir();
         }
 
         // b. Create three text files
         try {
-            for (int i = 1; i <= 3; i++) {
-                File file = new File(main, "myfile" + i + ".txt");
-                file.createNewFile();
-            }
+            File file = new File(main, "notes.txt");
+            file.createNewFile();
+            File file1 = new File(main, "data.txt");
+            file1.createNewFile();
+            File file2 = new File(main, "log.txt");
+            file2.createNewFile();
+
         } catch (IOException e) {
             System.out.println("Error in creating file.");
         }
 
         // c. Write messages to files
         try {
-            for (int i = 1; i <= 3; i++) {
-                File file = new File(main, "myfile" + i + ".txt");
+            String[] files = { "notes.txt", "data.txt", "log.txt" };
+            for (int i = 0; i < files.length; i++) {
+                File file = new File(main, files[i]);
                 FileWriter writer = new FileWriter(file);
-                writer.write("This is message #" + i + " inside " + file.getName() + "\n");
+                writer.write("There are " + (i + 1) + " chicken(s) in the file");
                 writer.close();
             }
         } catch (IOException e) {
@@ -34,13 +38,14 @@ public class FileHandlingActivity {
 
         // d. Read and display file contents
         try {
-            for (int i = 1; i <= 3; i++) {
-                File file = new File(main, "myfile" + i + ".txt");
+            String[] files = { "notes.txt", "data.txt", "log.txt" };
+            for (String name : files) {
+                File file = new File(main, name);
                 System.out.print(file.getName() + ": ");
                 try (FileReader reader = new FileReader(file)) {
-                    System.out.print((char) reader.read());
-                } catch (IOException e) {
-                    System.out.println("Error reading.");
+                    while (reader.ready()) {
+                        System.out.print((char) reader.read());
+                    }
                 }
                 System.out.println();
             }
@@ -56,10 +61,10 @@ public class FileHandlingActivity {
 
         // f. Copy contents to backup file
         try {
-            for (int i = 1; i <= 3; i++) {
-                File source = new File(main, "myfile" + i + ".txt");
-                File backupF = new File(backup, "myfile" + i + "bu.txt");
-
+            String[] files = { "notes.txt", "data.txt", "log.txt" };
+            for (String name : files) {
+                File source = new File(main, name);
+                File backupF = new File(backup, name.replace(".txt", "b.txt"));
                 try (FileReader reader = new FileReader(source);
                         FileWriter writer = new FileWriter(backupF)) {
                     while (reader.ready()) {
